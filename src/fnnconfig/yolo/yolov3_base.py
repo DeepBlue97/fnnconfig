@@ -38,7 +38,19 @@ dataset = dict(
 
 
 model = dict(
-
+    type='YOLOv3',
+    module=dict(
+        type='YOLOv3',
+        kwargs=dict(
+            num_cls=1, 
+            img_w=416, 
+            img_h=416, 
+            stride=[32,16,8],
+        )
+    )
+    # backbone='',
+    # neck='',
+    # head='',
 )
 
 loss = dict(
