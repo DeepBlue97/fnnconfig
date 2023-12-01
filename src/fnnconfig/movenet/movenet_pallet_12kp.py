@@ -5,9 +5,11 @@ learning_rate=0.0001
 weight_decay=0.0005
 num_classes=12
 
-dataset_root = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped'
-output_dir = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_noCenterWeight'
+# dataset_root = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped'
+# output_dir = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_noCenterWeight'
 # center_weight_origin = '/home/peter/workspace/scratch/fnn/fnnmodel/src/fnnmodel/movenet/assert/center_weight_origin.npy'
+dataset_root = '/datasets/hall_pallet_6_12kp/croped'
+output_dir = '/datasets/hall_pallet_6_12kp/croped/output_fnn_container'
 center_weight_origin = ''
 
 train_dataloader = dict(
@@ -75,10 +77,14 @@ model = dict(
         weight_decay=weight_decay,
     ),
     device='cuda',
-    weights='/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_noCenterWeight/epoch_300.pth',
+    # device='cpu',
+    # weights='/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_noCenterWeight/epoch_300.pth',
+    weights=os.path.join(output_dir, 'epoch_40.pth'),
     center_weight = center_weight_origin,
     center_weight_size = [48, 48],
     num_classes=num_classes,
+    is_qat=False,
+    test_size=[192,192],
 )
 
 schedule = dict(
