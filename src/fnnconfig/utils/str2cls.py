@@ -20,7 +20,7 @@ def dict2cls(d: dict, recursive=False):
     if type(t) == str:
         if recursive:
             for k in d:
-                if type(d[k]) == dict and 'type' in d[k] and d.get('init', True): # and k not in set(['optimizer', 'module']):
+                if type(d[k]) == dict and 'type' in d[k] and d.get('_init_', True): # and k not in set(['optimizer', 'module']):
                     d[k] = dict2cls(d[k], recursive=recursive)
         return new_cls(t, args, kwargs=d)
     else:

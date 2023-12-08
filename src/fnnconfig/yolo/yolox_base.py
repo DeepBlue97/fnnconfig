@@ -14,28 +14,70 @@
 # val_img_folder = "val2017"
 # num_classes = 12
 
+# input/output
 dataset_root = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped'
+# dataset_root = '/datasets/hall_pallet_imgs/hall_pallet_6/croped'
 train_annotation = "annotations/train.json"
 train_img_folder = "imgs"
 val_annotation = "annotations/train.json"
 val_img_folder = "imgs"
 num_classes = 3
 output_dir = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
-weight = output_dir + '/epoch_10.pth'
+# output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
+weight = output_dir + '/epoch_14.pth'
+# weight = ''
 
+# schedule
 batch_size = 8
 max_epoch = 100
 save_interval = 1
 
-# stride = [32, 16, 8]
+# module setup
+depth = 1.0
+width = 1.0
+act = 'silu'
+features = ("dark3", "dark4", "dark5")
+in_channels = [256, 512, 1024]
+depthwise = False
+
+# is_qat = True
+is_qat = False
 
 model = dict(
     type='fnnmodel.yolo.YOLOX',
     module=dict(
         type='fnnmodule.model.YOLOX',
-        num_classes=num_classes,
-        # width_mult=1.,
         # mode='train'
+        backbone=dict(
+            type='fnnmodule.backbone.darknet.CSPDarknet',
+            dep_mul=depth,
+            wid_mul=width,
+            out_features=features,
+            depthwise=depthwise,
+            act=act,
+            is_qat=is_qat,
+        ),
+        neck=dict(
+            type='fnnmodule.neck.yolox_pafpn.YOLOPAFPN',
+            depth=depth,
+            width=width,
+            in_features=features,
+            in_channels=in_channels,
+            depthwise=depthwise,
+            act=act,
+            is_qat=is_qat,
+        ),
+        head=dict(
+            type='fnnmodule.head.yolox.YOLOXHead',
+            num_classes=num_classes,
+            width=width,
+            strides=[8, 16, 32],
+            in_channels=in_channels,
+            act=act,
+            depthwise=depthwise,
+            use_l1=True,
+            is_qat=is_qat,
+        ),
     ),
     output_dir = output_dir,
 
@@ -44,10 +86,12 @@ model = dict(
     warmup_epochs = 5,
     warmup_lr = 0.00001,
 
+    # schedule
     log_interval = 10,
     save_interval = save_interval,
     weight = weight,
 
+    # optmizer
     weight_decay = 5e-4,
 
     basic_lr_per_img = 0.01 / 64.0,
@@ -66,7 +110,6 @@ model = dict(
     # ),
     device='cuda',
     # device='cpu',
-    weights=weight,
     # num_classes=num_classes,
 
     dataloader = dict(
