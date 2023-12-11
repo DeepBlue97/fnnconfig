@@ -24,7 +24,7 @@ val_img_folder = "imgs"
 num_classes = 3
 output_dir = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 # output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
-weight = output_dir + '/epoch_14.pth'
+weight = output_dir + '/epoch_100.pth'
 # weight = ''
 
 # schedule
@@ -124,7 +124,7 @@ model = dict(
                 preproc=dict(
                     type='fnnaug.augment.yolox.TrainTransform',
                     max_labels=50,
-                    flip_prob=0.5,
+                    flip_prob=0.,
                     hsv_prob=1.0,
                 ),
                 cache=False,
@@ -148,9 +148,9 @@ model = dict(
                     legacy=False,
                 ),
             ),
-            batch_size=2,
+            batch_size=1,
             shuffle=False,
-            num_workers=2,
+            num_workers=1,
             pin_memory=False,
         ),
     ),
