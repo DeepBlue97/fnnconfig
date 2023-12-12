@@ -33,8 +33,13 @@ max_epoch = 100
 save_interval = 1
 
 # module setup
-depth = 1.0
-width = 1.0
+# depth = 1.0
+# width = 1.0
+
+# nano
+depth = 0.33
+width = 0.25
+
 act = 'silu'
 features = ("dark3", "dark4", "dark5")
 in_channels = [256, 512, 1024]
@@ -154,6 +159,19 @@ model = dict(
             pin_memory=False,
         ),
     ),
+
+    evaluator=dict(
+        type='fnnmodel.evaluator.coco_evaluator.COCOEvaluator',
+        dataloader='val',
+        img_size=(416, 416),
+        confthre=0.6,
+        nmsthre=0.5,
+        num_classes=3,
+        testdev=False,
+        per_class_AP=True,
+        per_class_AR=True,
+        show_folder=output_dir+'/show',
+    )
     
     # schedule = dict(
     #     max_epoch=10
