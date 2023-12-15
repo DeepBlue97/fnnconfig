@@ -15,14 +15,16 @@
 # num_classes = 12
 
 # input/output
-dataset_root = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped'
+datasets = '/mnt/d/Share/datasets'
+datasets = '/datasets'
+dataset_root = datasets+'/hall_pallet_imgs/hall_pallet_6/croped'
 # dataset_root = '/datasets/hall_pallet_imgs/hall_pallet_6/croped'
 train_annotation = "annotations/train.json"
 train_img_folder = "imgs"
 val_annotation = "annotations/train.json"
 val_img_folder = "imgs"
 num_classes = 3
-output_dir = '/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
+output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 # output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 weight = output_dir + '/epoch_100.pth'
 # weight = ''
@@ -40,7 +42,8 @@ save_interval = 1
 depth = 0.33
 width = 0.25
 
-act = 'silu'
+img_size=(416, 416)
+act = 'relu'
 features = ("dark3", "dark4", "dark5")
 in_channels = [256, 512, 1024]
 depthwise = False
@@ -85,11 +88,14 @@ model = dict(
         ),
     ),
     output_dir = output_dir,
+    quant_dir = output_dir+'/quant',
 
     start_epoch = 0,
     max_epoch = max_epoch,
     warmup_epochs = 5,
     warmup_lr = 0.00001,
+
+    img_size=img_size,
 
     # schedule
     log_interval = 10,
@@ -125,7 +131,7 @@ model = dict(
                 data_dir=dataset_root,
                 json_file=train_annotation,
                 name=train_img_folder,
-                img_size=(416, 416),
+                img_size=img_size,
                 preproc=dict(
                     type='fnnaug.augment.yolox.TrainTransform',
                     max_labels=50,
@@ -147,7 +153,7 @@ model = dict(
                 data_dir=dataset_root,
                 json_file=val_annotation,
                 name=val_img_folder,
-                img_size=(416, 416),
+                img_size=img_size,
                 preproc=dict(
                     type='fnnaug.augment.yolox.ValTransform',
                     legacy=False,
@@ -163,7 +169,7 @@ model = dict(
     evaluator=dict(
         type='fnnmodel.evaluator.coco_evaluator.COCOEvaluator',
         dataloader='val',
-        img_size=(416, 416),
+        img_size=img_size,
         confthre=0.6,
         nmsthre=0.5,
         num_classes=3,
