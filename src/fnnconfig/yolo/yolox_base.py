@@ -28,8 +28,8 @@ num_classes = 3
 # output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 output_dir = datasets+'/hall_pallet_6_feet/output_fnn_yolox'
 # output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
-weight = output_dir + '/epoch_30.pth'
-# weight = ''
+# weight = output_dir + '/epoch_30.pth'
+weight = ''
 
 # schedule
 batch_size = 8
@@ -106,10 +106,10 @@ model = dict(
 
     # MQTT参数
     mqtt = dict(
-        hostname = 'host.docker.internal'
-        port = 1883
-        topic = ''
-        client = ''
+        hostname = 'host.docker.internal',
+        port = 1883,
+        topic = '',
+        client = '',
     ),
 
     # optmizer
