@@ -17,16 +17,18 @@
 # input/output
 datasets = '/mnt/d/Share/datasets'
 datasets = '/datasets'
-dataset_root = datasets+'/hall_pallet_imgs/hall_pallet_6/croped'
+# dataset_root = datasets+'/hall_pallet_imgs/hall_pallet_6/croped'
+dataset_root = datasets+'/hall_pallet_6_feet'
 # dataset_root = '/datasets/hall_pallet_imgs/hall_pallet_6/croped'
 train_annotation = "annotations/train.json"
 train_img_folder = "imgs"
 val_annotation = "annotations/train.json"
 val_img_folder = "imgs"
 num_classes = 3
-output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
+# output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
+output_dir = datasets+'/hall_pallet_6_feet/output_fnn_yolox'
 # output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
-weight = output_dir + '/epoch_100.pth'
+weight = output_dir + '/epoch_30.pth'
 # weight = ''
 
 # schedule
@@ -101,6 +103,14 @@ model = dict(
     log_interval = 10,
     save_interval = save_interval,
     weight = weight,
+
+    # MQTT参数
+    mqtt = dict(
+        hostname = 'host.docker.internal'
+        port = 1883
+        topic = ''
+        client = ''
+    ),
 
     # optmizer
     weight_decay = 5e-4,
