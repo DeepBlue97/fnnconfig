@@ -1,4 +1,4 @@
-# import os
+import os
 
 # from fnnconfig import *
 
@@ -28,8 +28,11 @@ num_classes = 3
 # output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 output_dir = datasets+'/hall_pallet_6_feet/output_fnn_yolox'
 # output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
-# weight = output_dir + '/epoch_30.pth'
-weight = ''
+# weight = output_dir + '/epoch_100.pth'
+weight = '/weight.pth'
+if not os.path.exists(weight):
+    print(f'Warning, not exists weights: {weight}, try not to use pretrained weights.')
+    weight = ''
 
 # schedule
 batch_size = 8
@@ -129,8 +132,8 @@ model = dict(
     #     #betas=(momentum, 0.999),
     #     weight_decay=weight_decay,
     # ),
-    device='cuda',
-    # device='cpu',
+    # device='cuda',
+    device='cpu',
     # num_classes=num_classes,
 
     dataloader = dict(
