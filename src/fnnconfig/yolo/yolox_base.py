@@ -1,5 +1,10 @@
 import os
 
+
+# 读取环境变量
+FNN_MODE = os.environ.get('FNN_MODE')
+assert FNN_MODE is not None, f'FNN_MODE is {FNN_MODE}'
+
 # from fnnconfig import *
 
 # from fnnaug.augment.base import AUGMENTATION_TRANSFORMS
@@ -28,11 +33,15 @@ num_classes = 3
 # output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 output_dir = datasets+'/hall_pallet_6_feet/output_fnn_yolox'
 # output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
+
+# Set weight file path
 # weight = output_dir + '/epoch_100.pth'
-weight = '/weight.pth'
-if not os.path.exists(weight):
-    print(f'Warning, not exists weights: {weight}, try not to use pretrained weights.')
-    weight = ''
+weight = ''
+if FNN_MODE == 'deploy':
+    weight = '/weight.pth'
+    print(f'deploy mode, change weight to {weight}')
+if weight:
+    assert os.path.exists(weight), f'not exists weights: {weight}'
 
 # schedule
 batch_size = 8
@@ -55,6 +64,10 @@ depthwise = False
 
 # is_qat = True
 is_qat = False
+
+device = 'cuda'
+if FNN_MODE == 'deploy':
+    device = 'cpu'
 
 model = dict(
     type='fnnmodel.yolo.YOLOX',
@@ -132,8 +145,7 @@ model = dict(
     #     #betas=(momentum, 0.999),
     #     weight_decay=weight_decay,
     # ),
-    # device='cuda',
-    device='cpu',
+    device=device,
     # num_classes=num_classes,
 
     dataloader = dict(
