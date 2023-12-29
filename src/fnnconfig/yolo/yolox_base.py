@@ -1,4 +1,9 @@
-# import os
+import os
+
+
+# 读取环境变量
+FNN_MODE = os.environ.get('FNN_MODE')
+assert FNN_MODE is not None, f'FNN_MODE is {FNN_MODE}'
 
 # from fnnconfig import *
 
@@ -17,17 +22,26 @@
 # input/output
 datasets = '/mnt/d/Share/datasets'
 datasets = '/datasets'
-dataset_root = datasets+'/hall_pallet_imgs/hall_pallet_6/croped'
+# dataset_root = datasets+'/hall_pallet_imgs/hall_pallet_6/croped'
+dataset_root = datasets+'/hall_pallet_6_feet'
 # dataset_root = '/datasets/hall_pallet_imgs/hall_pallet_6/croped'
 train_annotation = "annotations/train.json"
 train_img_folder = "imgs"
 val_annotation = "annotations/train.json"
 val_img_folder = "imgs"
 num_classes = 3
-output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
+# output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
+output_dir = datasets+'/hall_pallet_6_feet/output_fnn_yolox'
 # output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
-weight = output_dir + '/epoch_100.pth'
-# weight = ''
+
+# Set weight file path
+# weight = output_dir + '/epoch_100.pth'
+weight = ''
+if FNN_MODE == 'deploy':
+    weight = '/weight.pth'
+    print(f'deploy mode, change weight to {weight}')
+if weight:
+    assert os.path.exists(weight), f'not exists weights: {weight}'
 
 # schedule
 batch_size = 8
@@ -50,6 +64,10 @@ depthwise = False
 
 # is_qat = True
 is_qat = False
+
+device = 'cuda'
+if FNN_MODE == 'deploy':
+    device = 'cpu'
 
 model = dict(
     type='fnnmodel.yolo.YOLOX',
@@ -102,6 +120,14 @@ model = dict(
     save_interval = save_interval,
     weight = weight,
 
+    # MQTT参数
+    mqtt = dict(
+        hostname = 'host.docker.internal',
+        port = 1883,
+        topic = '',
+        client = '',
+    ),
+
     # optmizer
     weight_decay = 5e-4,
 
@@ -119,8 +145,7 @@ model = dict(
     #     #betas=(momentum, 0.999),
     #     weight_decay=weight_decay,
     # ),
-    device='cuda',
-    # device='cpu',
+    device=device,
     # num_classes=num_classes,
 
     dataloader = dict(
