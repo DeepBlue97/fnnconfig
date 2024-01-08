@@ -52,9 +52,7 @@ save_interval = 1
 # depth = 1.0
 # width = 1.0
 
-# nano
-depth = 0.33
-width = 0.25
+MODEL_SCALE = 'nano'
 
 img_size=(416, 416)
 act = 'relu'
@@ -68,6 +66,13 @@ is_qat = False
 device = 'cuda'
 if FNN_MODE == 'deploy':
     device = 'cpu'
+
+if MODEL_SCALE == 'nano':
+    # nano
+    depth = 0.33
+    width = 0.25
+    depthwise = True
+    
 
 model = dict(
     type='fnnmodel.yolo.YOLOX',
@@ -104,6 +109,7 @@ model = dict(
             use_l1=True,
             is_qat=is_qat,
         ),
+        is_qat=is_qat,
     ),
     output_dir = output_dir,
     quant_dir = output_dir+'/quant',
@@ -197,7 +203,7 @@ model = dict(
         img_size=img_size,
         confthre=0.6,
         nmsthre=0.5,
-        num_classes=3,
+        num_classes=num_classes,
         testdev=False,
         per_class_AP=True,
         per_class_AR=True,
