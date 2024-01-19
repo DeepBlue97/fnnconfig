@@ -18,7 +18,7 @@ test_size = 192
 weight = ''
 
 start_epoch = 0
-max_epoch = 10
+max_epoch = 300
 log_interval = 10
 save_interval = 10
 
@@ -26,6 +26,7 @@ model = dict(
     type='fnnmodel.movenet.MoveNet',
     output_dir=output_dir,
     quant_dir=output_dir+'/quant',
+    show_dir=output_dir+'/show',
     is_qat=is_qat,
     test_size=test_size,
     weight=weight,
@@ -58,7 +59,6 @@ model = dict(
         weight_decay=weight_decay,
     ),
     device='cuda',
-    # weights='/mnt/d/Share/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn/epoch_9.pth',
     center_weight = center_weight_origin,
     center_weight_size = [48, 48],
     num_classes=num_classes,
@@ -86,7 +86,20 @@ model = dict(
                 img_size=192,
                 data_aug=None
             ),
-            batch_size=2,
+            batch_size=1,
+            shuffle=False,
+            num_workers=2,
+            pin_memory=False,
+        ),
+        test=dict(
+            type='torch.utils.data.DataLoader',
+            dataset=dict(
+                type='fnndataset.coco.CocoKeypointTestDataset',
+                img_dir=val_img_folder,
+                img_size=192,
+                data_aug=None
+            ),
+            batch_size=1,
             shuffle=False,
             num_workers=2,
             pin_memory=False,

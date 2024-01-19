@@ -63,7 +63,7 @@ depthwise = False
 # is_qat = True
 is_qat = False
 
-device = 'cuda'
+device = 'cuda:1'
 if FNN_MODE == 'deploy':
     device = 'cpu'
 
@@ -108,6 +108,7 @@ model = dict(
             depthwise=depthwise,
             use_l1=True,
             is_qat=is_qat,
+            device=device,
         ),
         is_qat=is_qat,
     ),
