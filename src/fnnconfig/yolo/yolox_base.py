@@ -5,34 +5,16 @@ import os
 FNN_MODE = os.environ.get('FNN_MODE')
 assert FNN_MODE is not None, f'FNN_MODE is {FNN_MODE}'
 
-# from fnnconfig import *
-
-# from fnnaug.augment.base import AUGMENTATION_TRANSFORMS
-# from fnnaug.transform.base import DEFAULT_TRANSFORMS
-# from fnnfunctor.loss import YOLOv3Loss
-
-# dataset_root = '/mnt/d/Share/datasets/coco'
-# output_dir = '/mnt/d/Share/datasets/coco/output_fnn_yolox'
-# train_annotation = "annotations/train_ADAS.json"
-# train_img_folder = "train2017"
-# val_annotation = "annotations/val_ADAS.json"
-# val_img_folder = "val2017"
-# num_classes = 12
-
 # input/output
 datasets = '/mnt/d/Share/datasets'
 datasets = '/datasets'
-# dataset_root = datasets+'/hall_pallet_imgs/hall_pallet_6/croped'
 dataset_root = datasets+'/hall_pallet_6_feet'
-# dataset_root = '/datasets/hall_pallet_imgs/hall_pallet_6/croped'
 train_annotation = "annotations/train.json"
 train_img_folder = "imgs"
 val_annotation = "annotations/train.json"
 val_img_folder = "imgs"
 num_classes = 3
-# output_dir = datasets+'/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 output_dir = datasets+'/hall_pallet_6_feet/output_fnn_yolox'
-# output_dir = '/datasets/hall_pallet_imgs/hall_pallet_6/croped/output_fnn_yolox'
 
 # Set weight file path
 # weight = output_dir + '/epoch_100.pth'
@@ -46,7 +28,7 @@ if weight:
 # schedule
 batch_size = 8
 max_epoch = 100
-save_interval = 1
+save_interval = 10
 
 # module setup
 # depth = 1.0
@@ -78,7 +60,6 @@ model = dict(
     type='fnnmodel.yolo.YOLOX',
     module=dict(
         type='fnnmodule.model.YOLOX',
-        # mode='train'
         backbone=dict(
             type='fnnmodule.backbone.darknet.CSPDarknet',
             dep_mul=depth,
@@ -153,7 +134,6 @@ model = dict(
     #     weight_decay=weight_decay,
     # ),
     device=device,
-    # num_classes=num_classes,
 
     dataloader = dict(
         train=dict(
@@ -210,8 +190,4 @@ model = dict(
         per_class_AR=True,
         show_folder=output_dir+'/show',
     )
-    
-    # schedule = dict(
-    #     max_epoch=10
-    # )
 )
